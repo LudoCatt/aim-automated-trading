@@ -43,7 +43,7 @@ from auto_trading_aim.data_loader_dict import DataLoaderDict
 # contenente oggetti di tipo DataLoader, che scarica i dati di mercato relativi ai prezzi di 
 # chiusura ("Close") e i volumi ("Volume") per ogni giorno (lavorativo) del 2021 
 historical_data = DataLoaderDict(tickers, start="2021-01-01", end="2021-12-31", interval="1d") # scarica i dati
-historical_data.save(path = "data/") # salva i dati
+historical_data.save(path = "data/Dataset1") # salva i dati
 
 # Descrizione testuale dei dati di prezzi e di volumi, con:
 # - codice del ticker selezionato, periodo e intervallo
