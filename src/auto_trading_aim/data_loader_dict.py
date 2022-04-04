@@ -23,3 +23,8 @@ class DataLoaderDict(object):
     def __getitem__(self, tick):
         return self.dict[tick]
 
+    def build_portfolio(self, allocation):
+        prices_dict={}
+        for tick in allocation.keys():
+            prices_dict[tick]=self.dict[tick].prices
+        return Portfolio(allocation, prices_dict)
