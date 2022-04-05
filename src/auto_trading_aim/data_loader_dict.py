@@ -8,9 +8,6 @@ class DataLoaderDict(object):
         self.dict={}
         for tick in tickers:
             self.dict[tick]=DataLoader(tick, start, end, interval)
-            self.start=start
-            self.end=end
-            self.interval=interval
 
     def save(self, path):
         f=open(path, 'w')

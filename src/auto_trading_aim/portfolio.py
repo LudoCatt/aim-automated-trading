@@ -6,7 +6,6 @@ import numpy as np
 class Portfolio(object):
     def __init__(self, allocation, prices_dict):
         self.allocation=allocation
-        self.prices_dict=prices_dict # so di sprecare memoria inutilmente ma è comodo per add
         self.dict={}
         for tick in allocation.keys():
             self.dict[tick]=Asset(tick, prices_dict[tick], allocation[tick])
@@ -16,6 +15,7 @@ class Portfolio(object):
 
     def __setitem__(self, ticker, asset):
         self.dict[ticker] = asset
+        self.allocation[ticker] = asset.volume_owned
 
     def __repr__(self):
         stringa={}
@@ -43,16 +43,25 @@ class Portfolio(object):
 
     def __calcola_valori(self):
         ticks=list(self.dict.keys())
-        valore=self.dict[ticks[0]].prices
+        valore=self.dict[ticks[0]].volume_owned*self.dict[ticks[0]].prices
         for tick in ticks[1:]:
             valore=valore + (self.dict[tick].volume_owned*self.dict[tick].prices)
         self.valore=valore
-        self.mkt_returns=valore.pct_change(1)[1:]
+        self.mkt_returns=valore.pct_change(1)
+        self.mkt_returns=self.mkt_returns[self.mkt_returns.notna()]
 
     def __add__(self, portafoglio2):
         new_allocation={**self.allocation, **portafoglio2.allocation}
+        new_prices={}
+        for tick in portafoglio2.allocation.keys(): # portafoglio2 sovrascrive dove sono in comune, devo aggiungere
+            new_allocation[tick]+=self.allocation.get(tick,0)
         for tick in new_allocation.keys():
-            new_allocation[tick]=new_allocation[tick]+self.allocation.get(tick,0)
-        new_prices={**self.prices_dict, **portafoglio2.prices_dict}
+            try:
+                new_prices[tick]=self.dict[tick].prices
+            except:
+                new_prices[tick]=portafoglio2.dict[tick].prices
         return Portfolio(new_allocation, new_prices)
+
+    def to_df(self):
+        return pd.DataFrame(self.allocation, index=['Volume'])
 

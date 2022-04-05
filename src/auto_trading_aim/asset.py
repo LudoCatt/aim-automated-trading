@@ -1,4 +1,3 @@
-import numpy as np
 import matplotlib.pyplot as plt
 import auto_trading_aim.portfolio as ptf
 
@@ -6,15 +5,16 @@ class Asset(object):
     def __init__(self, ticker_name, prices, volume_owned):
         self.ticker_name = ticker_name
         self.prices = prices
-        self.mkt_returns=self.prices.pct_change(1)[1:]
+        self.mkt_returns=self.prices.pct_change(1)
+        self.mkt_returns=self.mkt_returns[self.mkt_returns.notna()]
 # per il primo non è definito il rendimento, si potrebbero in alternativa selezionare solo i
 # valori ben definiti con notna
         self.volume_owned = volume_owned
         self.__calcolo()
 
     def __calcolo(self):
-        self.mu=np.mean(np.array(self.mkt_returns))
-        self.ss=np.var(np.array(self.mkt_returns))
+        self.mu=self.mkt_returns.mean()
+        self.ss=self.mkt_returns.var()
 
     def __repr__(self):
         return '{} #{} | mu: {} | sigma_squared: {}\n'.format(self.ticker_name, self.volume_owned, self.mu, self.ss)
@@ -27,7 +27,7 @@ class Asset(object):
         plt.show()
 
     def __truediv__(self, n):
-        new_volume = self.volume_owned/n
+        new_volume = self.volume_owned//n
         return Asset(self.ticker_name, self.prices, new_volume)
 
     def __add__(self, oggetto2):

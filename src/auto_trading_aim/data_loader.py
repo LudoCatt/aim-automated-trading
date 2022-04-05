@@ -1,5 +1,4 @@
 import yfinance as yf
-import numpy as np
 import matplotlib.pyplot as plt
 
 class DataLoader(object):
@@ -16,18 +15,16 @@ class DataLoader(object):
         self.__calcolo() # alla prima chiamata salvo tutti i dati richiesti per la stampa
 
     def __calcolo(self):
-        close=np.array(self.prices)
-        volume=np.array(self.volumes)
-        self.mC=np.min(close)
-        self.mV=np.min(volume)
-        self.MC=np.max(close)
-        self.MV=np.max(volume)
-        self.meC=np.mean(close)
-        self.meV=np.mean(volume)
-        self.fC=close[0]
-        self.lC=close[-1]
-        self.fV=volume[0]
-        self.lV=volume[-1]
+        self.mC=self.prices.min()
+        self.mV=self.volumes.min()
+        self.MC=self.prices.max()
+        self.MV=self.volumes.min()
+        self.meC=self.prices.mean()
+        self.meV=self.volumes.mean()
+        self.fC=self.prices[0]
+        self.lC=self.prices[-1]
+        self.fV=self.volumes[0]
+        self.lV=self.volumes[-1]
 
     def __repr__(self):
         return '{} data from {} to {}, {}\n\
